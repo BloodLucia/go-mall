@@ -1,1 +1,1 @@
-# go-mall
+# Go Gin Mall
