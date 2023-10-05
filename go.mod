@@ -41,6 +41,7 @@ require (
 	github.com/spf13/cobra v0.0.5 // indirect
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
+	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.5.0 // indirect
