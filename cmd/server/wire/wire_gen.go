@@ -11,6 +11,7 @@ import (
 	"github.com/3lur/go-mall/internal/controller"
 	"github.com/3lur/go-mall/internal/repo"
 	"github.com/3lur/go-mall/internal/server"
+	"github.com/3lur/go-mall/internal/service"
 	"github.com/3lur/go-mall/pkg/config"
 )
 
@@ -22,7 +23,8 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 		return nil, nil, err
 	}
 	userRepo := repo.NewUserRepo(dataData)
-	userController := controller.NewUserController(userRepo)
+	userService := service.NewUserService(userRepo)
+	userController := controller.NewUserController(userService)
 	pingController := controller.NewPingController()
 	engine := server.NewServerHTTP(userController, pingController)
 	serverServer := server.NewServer(engine)

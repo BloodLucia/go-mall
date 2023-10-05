@@ -1,16 +1,16 @@
 package controller
 
 import (
-	"github.com/3lur/go-mall/internal/repo"
+	"github.com/3lur/go-mall/internal/service"
 )
 
 type userController struct {
-	userRepo repo.UserRepo
+	userSrv service.UserService
 }
 
 type UserController interface {
 }
 
-func NewUserController(userRepo repo.UserRepo) UserController {
-	return &userController{userRepo}
+func NewUserController(userSrv service.UserService) UserController {
+	return &userController{userSrv}
 }
