@@ -9,8 +9,8 @@ import (
 )
 
 type UserRepo interface {
-	FindByEmail(ctx context.Context, email string) (exist bool, user *model.User, err error)
-	FindByUsername(ctx context.Context, username string) (exist bool, user *model.User, err error)
+	FindByEmail(ctx context.Context, email string) (user *model.User, exist bool, err error)
+	FindByUsername(ctx context.Context, username string) (user *model.User, exist bool, err error)
 }
 
 type userRepo struct {
@@ -18,7 +18,7 @@ type userRepo struct {
 }
 
 // FindByUsername get user by username.
-func (ur *userRepo) FindByUsername(ctx context.Context, username string) (exist bool, user *model.User, err error) {
+func (ur *userRepo) FindByUsername(ctx context.Context, username string) (user *model.User, exist bool, err error) {
 	user = &model.User{}
 	exist, err = ur.data.DB.Context(ctx).Where("username = ?", username).Get(user)
 	if err != nil {
@@ -28,7 +28,7 @@ func (ur *userRepo) FindByUsername(ctx context.Context, username string) (exist 
 }
 
 // FindByEmail get user by email.
-func (ur *userRepo) FindByEmail(ctx context.Context, email string) (exist bool, user *model.User, err error) {
+func (ur *userRepo) FindByEmail(ctx context.Context, email string) (user *model.User, exist bool, err error) {
 	user = &model.User{}
 	exist, err = ur.data.DB.Context(ctx).Where("email = ?", email).Get(user)
 	if err != nil {
