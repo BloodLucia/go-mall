@@ -7,8 +7,11 @@ import (
 
 func NewServerHTTP(
 	userC controller.UserController,
+	pingC controller.PingController,
 ) *gin.Engine {
 	r := gin.New()
+
+	r.GET("/ping", pingC.Ping)
 
 	return r
 

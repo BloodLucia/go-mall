@@ -21,7 +21,8 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 		return nil, nil, err
 	}
 	userController := controller.NewUserController(dataData)
-	engine := server.NewServerHTTP(userController)
+	pingController := controller.NewPingController()
+	engine := server.NewServerHTTP(userController, pingController)
 	serverServer := server.NewServer(engine)
 	return serverServer, func() {
 		cleanup()
