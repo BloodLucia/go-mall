@@ -8,7 +8,7 @@ import (
 )
 
 type UserService interface {
-	RegisterByEmail(ctx context.Context, schema *schema.UserRegisterRequest) error
+	RegisterByEmail(ctx context.Context, schema *schema.UserRegisterRequest) (resp *schema.UserLoginResponse)
 }
 
 type userService struct {
@@ -16,8 +16,8 @@ type userService struct {
 }
 
 // RegisterByEmail implements UserService.
-func (*userService) RegisterByEmail(ctx context.Context, schema *schema.UserRegisterRequest) error {
-	panic("unimplemented")
+func (*userService) RegisterByEmail(ctx context.Context, schema *schema.UserRegisterRequest) (resp *schema.UserLoginResponse) {
+	return nil
 }
 
 func NewUserService(userRepo repo.UserRepo) UserService {
