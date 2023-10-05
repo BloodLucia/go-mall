@@ -4,13 +4,17 @@
 package wire
 
 import (
+	"github.com/3lur/go-mall/internal/common/data"
+	"github.com/3lur/go-mall/internal/controller"
 	"github.com/3lur/go-mall/internal/server"
 	"github.com/3lur/go-mall/pkg/config"
 	"github.com/google/wire"
 )
 
-func NewApp(*config.Config) (*server.Server, func(), error) {
+func NewApp(conf *config.Config) (*server.Server, func(), error) {
 	panic(wire.Build(
+		data.NewData,
+		controller.ProviderSet,
 		server.ProviderSet,
 	))
 }

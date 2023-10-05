@@ -2,9 +2,9 @@ package data
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/3lur/go-mall/pkg/config"
+	"github.com/3lur/go-mall/pkg/console"
 	_ "github.com/go-sql-driver/mysql"
 	"xorm.io/xorm"
 )
@@ -26,18 +26,18 @@ func NewData(conf *config.Config) (*Data, func(), error) {
 	db, err := xorm.NewEngine(conf.Database.Driver, dsn)
 
 	if err != nil {
-		log.Fatalf("failed connect to database: %s", err)
+		return nil, nil, err
 	}
 
 	if err := db.Ping(); err != nil {
-		log.Fatalf("database ping error: %s", err)
+		return nil, nil, err
 	}
 
-	log.Println("successfully connected to the database!")
+	console.Success("successfully connected to the database!")
 
 	return &Data{db}, func() {
 		if err := db.Close(); err != nil {
-			log.Fatalf("failed to close database: %s", err)
+			console.ExitIf(err)
 		}
 	}, nil
 }

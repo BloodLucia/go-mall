@@ -7,15 +7,23 @@
 package wire
 
 import (
+	"github.com/3lur/go-mall/internal/common/data"
+	"github.com/3lur/go-mall/internal/controller"
 	"github.com/3lur/go-mall/internal/server"
 	"github.com/3lur/go-mall/pkg/config"
 )
 
 // Injectors from wire.go:
 
-func NewApp(configConfig *config.Config) (*server.Server, func(), error) {
-	engine := server.NewServerHTTP()
+func NewApp(conf *config.Config) (*server.Server, func(), error) {
+	dataData, cleanup, err := data.NewData(conf)
+	if err != nil {
+		return nil, nil, err
+	}
+	userController := controller.NewUserController(dataData)
+	engine := server.NewServerHTTP(userController)
 	serverServer := server.NewServer(engine)
 	return serverServer, func() {
+		cleanup()
 	}, nil
 }
