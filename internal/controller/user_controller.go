@@ -1,14 +1,16 @@
 package controller
 
-import "github.com/3lur/go-mall/internal/common/data"
+import (
+	"github.com/3lur/go-mall/internal/repo"
+)
 
 type userController struct {
-	*data.Data
+	userRepo repo.UserRepo
 }
 
 type UserController interface {
 }
 
-func NewUserController(data *data.Data) UserController {
-	return &userController{data}
+func NewUserController(userRepo repo.UserRepo) UserController {
+	return &userController{userRepo}
 }

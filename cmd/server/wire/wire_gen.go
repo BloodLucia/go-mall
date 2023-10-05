@@ -9,6 +9,7 @@ package wire
 import (
 	"github.com/3lur/go-mall/internal/common/data"
 	"github.com/3lur/go-mall/internal/controller"
+	"github.com/3lur/go-mall/internal/repo"
 	"github.com/3lur/go-mall/internal/server"
 	"github.com/3lur/go-mall/pkg/config"
 )
@@ -20,7 +21,8 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	userController := controller.NewUserController(dataData)
+	userRepo := repo.NewUserRepo(dataData)
+	userController := controller.NewUserController(userRepo)
 	pingController := controller.NewPingController()
 	engine := server.NewServerHTTP(userController, pingController)
 	serverServer := server.NewServer(engine)
