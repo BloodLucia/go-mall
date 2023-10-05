@@ -9,7 +9,6 @@ type Database struct {
 	Username string `required:"true" default:"root"`
 	Password string `required:"true"`
 	DbName   string `required:"true"`
-	CharSet  string `default:"utf8mb4"`
 }
 
 func DatabaseStore() Database {
