@@ -1,16 +1,17 @@
-package configs
+package config
 
 import (
 	"fmt"
 
+	"github.com/3lur/go-mall/internal/common/configs"
 	"github.com/joho/godotenv"
 )
 
-type Configs struct {
-	Database
+type Config struct {
+	configs.Database
 }
 
-func New(filename string) *Configs {
+func New(filename string) *Config {
 	if filename == "" {
 		filename = ".env"
 	}
@@ -18,7 +19,7 @@ func New(filename string) *Configs {
 		panic(fmt.Errorf("failed to load [%s] file: %s", filename, err))
 	}
 
-	return &Configs{
-		Database: DatabaseStore(),
+	return &Config{
+		Database: configs.DatabaseStore(),
 	}
 }
