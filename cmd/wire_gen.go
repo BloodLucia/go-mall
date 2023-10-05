@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package mallcmd
 
 import (
 	"github.com/3lur/go-mall/internal/server"
@@ -12,7 +12,7 @@ import (
 
 // Injectors from wire.go:
 
-func newApp() (*server.Server, func(), error) {
+func NewApp() (*server.Server, func(), error) {
 	engine := server.NewServerHTTP()
 	serverServer := server.NewServer(engine)
 	return serverServer, func() {
