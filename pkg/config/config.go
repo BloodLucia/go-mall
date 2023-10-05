@@ -2,9 +2,9 @@ package config
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/3lur/go-mall/internal/common/configs"
+	"github.com/3lur/go-mall/pkg/console"
 	"github.com/joho/godotenv"
 )
 
@@ -24,7 +24,7 @@ func New() *Config {
 		filename = ".env"
 	}
 	if err := godotenv.Load(filename); err != nil {
-		panic(fmt.Errorf("failed to load [%s] file: %s", filename, err))
+		console.ExitIf(err)
 	}
 
 	return &Config{
