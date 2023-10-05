@@ -3,7 +3,11 @@ module github.com/3lur/go-mall
 go 1.21.1
 
 require (
-	gitea.com/lunny/log v0.0.0-20190322053110-01b5df579c4e // indirect
+	gitea.com/lunny/log v0.0.0-20190322053110-01b5df579c4e
+	github.com/thedevsaddam/govalidator v1.9.10
+)
+
+require (
 	github.com/ahl5esoft/golang-underscore v2.0.0+incompatible // indirect
 	github.com/bytedance/sonic v1.10.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
@@ -41,7 +45,6 @@ require (
 	github.com/spf13/cobra v0.0.5 // indirect
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
-	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.5.0 // indirect
