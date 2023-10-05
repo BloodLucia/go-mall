@@ -8,11 +8,12 @@ package wire
 
 import (
 	"github.com/3lur/go-mall/internal/server"
+	"github.com/3lur/go-mall/pkg/config"
 )
 
 // Injectors from wire.go:
 
-func NewApp() (*server.Server, func(), error) {
+func NewApp(configConfig *config.Config) (*server.Server, func(), error) {
 	engine := server.NewServerHTTP()
 	serverServer := server.NewServer(engine)
 	return serverServer, func() {

@@ -5,10 +5,11 @@ package wire
 
 import (
 	"github.com/3lur/go-mall/internal/server"
+	"github.com/3lur/go-mall/pkg/config"
 	"github.com/google/wire"
 )
 
-func NewApp() (*server.Server, func(), error) {
+func NewApp(*config.Config) (*server.Server, func(), error) {
 	panic(wire.Build(
 		server.ProviderSet,
 	))
