@@ -17,6 +17,13 @@ func Error(msg string) {
 	output(msg, "red")
 }
 
+// ErrorIf 语法糖，自带 err != nil 判断
+func ErrorIf(err error) {
+	if err != nil {
+		Error(err.Error())
+	}
+}
+
 // Warning 打印一条提示消息，黄色输出
 func Warning(msg string) {
 	output(msg, "yellow")

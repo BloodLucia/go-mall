@@ -1,13 +1,22 @@
 package validator
 
 import (
-	"github.com/gin-gonic/gin"
+	"errors"
+	"log"
+	"reflect"
+	"strings"
+	"unicode"
+
+	"github.com/3lur/go-mall/internal/common/reason"
+	"github.com/3lur/go-mall/pkg/console"
+	"github.com/3lur/go-mall/pkg/e"
+	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
-	"github.com/thedevsaddam/govalidator"
 )
 
-type Validator struct {
+type MyValidator struct {
 	Validate *validator.Validate
+	Tran     ut.Translator
 }
 
 // FormErrorField indicates the current form error content. which field is error and error message.
@@ -16,36 +25,81 @@ type FormErrorField struct {
 	ErrorMsg   string `json:"error_msg"`
 }
 
-// ValidatorFunc
-type ValidatorFunc func(any, *gin.Context) map[string][]string
+func (v *MyValidator) Check(obj any) (errFields []*FormErrorField, err error) {
+	defer func() {
+		if len(errFields) == 0 {
+			return
+		}
+		for _, field := range errFields {
+			if len(field.ErrorField) == 0 {
+				continue
+			}
+			firstRune := []rune(field.ErrorMsg)[0]
+			if !unicode.IsLetter(firstRune) || !unicode.Is(unicode.Latin, firstRune) {
+				continue
+			}
+			upperFirstRune := unicode.ToUpper(firstRune)
+			field.ErrorMsg = string(upperFirstRune) + field.ErrorMsg[1:]
+			if !strings.HasSuffix(field.ErrorMsg, ".") {
+				field.ErrorMsg += "."
+			}
+		}
+	}()
+	err = v.Validate.Struct(obj)
+	if err != nil {
+		var validErrs validator.ValidationErrors
+		if !errors.As(err, &validErrs) {
+			console.ErrorIf(err)
+			return nil, errors.New("validate check exception")
+		}
 
-// Validate
-func BindAndValidate(ctx *gin.Context, obj any, fn ValidatorFunc) bool {
-	// 1. 解析请求，支持JSON、Form、Query
-	if err := ctx.ShouldBind(obj); err != nil {
-		// TODO response.BadRequest()
-		return false
+		for _, fieldErr := range validErrs {
+			errField := &FormErrorField{
+				ErrorField: fieldErr.Field(),
+				ErrorMsg:   fieldErr.Translate(v.Tran),
+			}
+
+			sns := fieldErr.StructNamespace()
+
+			_, fieldName, found := strings.Cut(sns, ".")
+
+			if found {
+				originalTag := getObjectTagByFieldName(obj, fieldName)
+				if len(originalTag) > 0 {
+					errField.ErrorField = originalTag
+				}
+			}
+			errFields = append(errFields, errField)
+		}
+		if len(errFields) > 0 {
+			errMsg := ""
+			if len(errFields) == 1 {
+				errMsg = errFields[0].ErrorMsg
+			}
+			return errFields, e.BadRequest(reason.RequestBodyError).WithMsg(errMsg)
+		}
 	}
 
-	// 2. 验证
-	errs := fn(obj, ctx)
-
-	// 3. 判断验证是否通过
-	if len(errs) > 0 {
-		// TODO response.BadRequest
-		return false
-	}
-
-	return true
+	return nil, nil
 }
 
-func Validate(data any, rules govalidator.MapData, msgs govalidator.MapData) map[string][]string {
-	o := govalidator.Options{
-		Data:          data,
-		Rules:         rules,
-		TagIdentifier: "valid",
-		Messages:      msgs,
-	}
+func getObjectTagByFieldName(obj any, fieldName string) (tag string) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println(err)
+		}
+	}()
 
-	return govalidator.New(o).ValidateStruct()
+	objT := reflect.TypeOf(obj)
+	objT = objT.Elem()
+
+	structField, exists := objT.FieldByName(fieldName)
+	if !exists {
+		return ""
+	}
+	tag = structField.Tag.Get("json")
+	if len(tag) == 0 {
+		return structField.Tag.Get("form")
+	}
+	return tag
 }
