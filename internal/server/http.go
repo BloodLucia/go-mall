@@ -13,6 +13,8 @@ func NewServerHTTP(
 
 	r.GET("/ping", pingC.Ping)
 
+	r.POST("/register", userC.Register)
+
 	return r
 
 }
