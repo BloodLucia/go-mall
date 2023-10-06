@@ -10,9 +10,12 @@ import (
 	"github.com/3lur/go-mall/internal/common/reason"
 	"github.com/3lur/go-mall/pkg/console"
 	"github.com/3lur/go-mall/pkg/e"
+	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 )
+
+var Validate *MyValidator
 
 type MyValidator struct {
 	Validate *validator.Validate
@@ -23,6 +26,16 @@ type MyValidator struct {
 type FormErrorField struct {
 	ErrorField string `json:"error_field"`
 	ErrorMsg   string `json:"error_msg"`
+}
+
+func init() {
+	// 国际化
+	// tran := getTran()
+	validate := validator.New()
+	Validate = &MyValidator{
+		Validate: validate,
+		// Tran:     tran,
+	}
 }
 
 func (v *MyValidator) Check(obj any) (errFields []*FormErrorField, err error) {
@@ -102,4 +115,12 @@ func getObjectTagByFieldName(obj any, fieldName string) (tag string) {
 		return structField.Tag.Get("form")
 	}
 	return tag
+}
+
+func getTran() ut.Translator {
+	tran, ok := ut.New(zh.New()).GetTranslator("zh-CN")
+	if !ok {
+		console.Exit("failed to get translator")
+	}
+	return tran
 }

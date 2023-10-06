@@ -14,8 +14,15 @@ import (
 func BindAndCheck(ctx *gin.Context, data any) bool {
 	// 支持 JSON、Form、URL Query
 	if err := ctx.ShouldBind(data); err != nil {
-		console.Warning(fmt.Sprintf("http_handle ShouldBindJSON error: %s", err))
+		console.Warning(fmt.Sprintf("http_handle ShouldBind error: %s", err))
 		response.Build(ctx, e.New(http.StatusBadRequest, reason.RequestBodyError), nil)
+		return false
+	}
+
+	errFields, err := Validate.Check(data)
+
+	if err != nil {
+		response.Build(ctx, err, errFields)
 		return false
 	}
 

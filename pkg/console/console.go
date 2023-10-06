@@ -29,6 +29,10 @@ func Warning(msg string) {
 	output(msg, "yellow")
 }
 
+func WarningIn(err error) {
+	Warning(err.Error())
+}
+
 // Exit 打印错误信息，并退出 os.Exit(1)
 func Exit(msg string) {
 	Error(msg)
