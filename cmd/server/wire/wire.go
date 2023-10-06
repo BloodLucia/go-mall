@@ -13,12 +13,26 @@ import (
 	"github.com/google/wire"
 )
 
+var controllerSet = wire.NewSet(
+	controller.NewUserController,
+	controller.NewPingController,
+)
+
+var serviceSet = wire.NewSet(
+	service.NewUserService,
+)
+
+var repoSet = wire.NewSet(
+	repo.NewUserRepo,
+)
+
 func NewApp(conf *config.Config) (*server.Server, func(), error) {
 	panic(wire.Build(
 		data.NewData,
-		repo.ProviderSet,
-		service.ProviderSet,
-		controller.ProviderSet,
-		server.ProviderSet,
+		repoSet,
+		serviceSet,
+		controllerSet,
+		server.NewServer,
+		server.NewServerHTTP,
 	))
 }

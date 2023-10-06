@@ -13,6 +13,7 @@ import (
 	"github.com/3lur/go-mall/internal/server"
 	"github.com/3lur/go-mall/internal/service"
 	"github.com/3lur/go-mall/pkg/config"
+	"github.com/google/wire"
 )
 
 // Injectors from wire.go:
@@ -32,3 +33,11 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 		cleanup()
 	}, nil
 }
+
+// wire.go:
+
+var controllerSet = wire.NewSet(controller.NewUserController, controller.NewPingController)
+
+var serviceSet = wire.NewSet(service.NewUserService)
+
+var repoSet = wire.NewSet(repo.NewUserRepo)
