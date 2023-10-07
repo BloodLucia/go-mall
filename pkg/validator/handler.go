@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// BindAndCheck
 func BindAndCheck(ctx *gin.Context, data any) bool {
 	// 支持 JSON、Form、URL Query
 	if err := ctx.ShouldBind(data); err != nil {
@@ -29,6 +30,7 @@ func BindAndCheck(ctx *gin.Context, data any) bool {
 	return true
 }
 
+// BindAndCheckReturnErr 返回错误字段信息
 func BindAndCheckReturnErr(ctx *gin.Context, data any) (errFields []*FormErrorField) {
 	if err := ctx.ShouldBind(data); err != nil {
 		response.Build(ctx, e.New(http.StatusBadRequest, reason.RequestBodyError), nil)
