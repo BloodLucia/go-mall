@@ -29,7 +29,8 @@ func Warning(msg string) {
 	output(msg, "yellow")
 }
 
-func WarningIn(err error) {
+// WarningIf 语法糖，自带 err != nil 判断
+func WarningIf(err error) {
 	Warning(err.Error())
 }
 
