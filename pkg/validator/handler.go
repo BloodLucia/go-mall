@@ -28,3 +28,13 @@ func BindAndCheck(ctx *gin.Context, data any) bool {
 
 	return true
 }
+
+func BindAndCheckReturnErr(ctx *gin.Context, data any) (errFields []*FormErrorField) {
+	if err := ctx.ShouldBind(data); err != nil {
+		response.Build(ctx, e.New(http.StatusBadRequest, reason.RequestBodyError), nil)
+		return nil
+	}
+	errFields, _ = Validate.Check(data)
+
+	return errFields
+}
