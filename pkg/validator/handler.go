@@ -20,10 +20,10 @@ func BindAndCheck(ctx *gin.Context, data any) bool {
 		return false
 	}
 
-	errFields, err := Validate.Check(data)
+	err := Validate.Struct(data)
 
 	if err != nil {
-		response.Build(ctx, err, errFields)
+		ctx.JSON(422, err.Error())
 		return false
 	}
 
@@ -36,7 +36,7 @@ func BindAndCheckReturnErr(ctx *gin.Context, data any) (errFields []*FormErrorFi
 		response.Build(ctx, e.New(http.StatusBadRequest, reason.RequestBodyError), nil)
 		return nil
 	}
-	errFields, _ = Validate.Check(data)
+	errFields, _ = Get().Check(data)
 
 	return errFields
 }

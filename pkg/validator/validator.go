@@ -10,11 +10,20 @@ import (
 	"github.com/3lur/go-mall/internal/common/reason"
 	"github.com/3lur/go-mall/pkg/console"
 	"github.com/3lur/go-mall/pkg/e"
+	"github.com/go-playground/locales/en"
+	"github.com/go-playground/locales/zh"
+	"github.com/go-playground/locales/zh_Hant_TW"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
+	zh_translations "github.com/go-playground/validator/v10/translations/zh"
 )
 
-var Validate *MyValidator
+var (
+	validate *validator.Validate
+	tran     ut.Translator
+)
+
+var Validate *validator.Validate
 
 type MyValidator struct {
 	Validate *validator.Validate
@@ -29,11 +38,20 @@ type FormErrorField struct {
 
 func init() {
 	// 国际化
-	// tran := getTran()
+	Validate = validator.New()
+	uni := ut.New(en.New(), en.New(), zh.New())
+	tran, _ := uni.GetTranslator("zh")
+
+	zh_translations.RegisterDefaultTranslations(Validate, tran)
+
+}
+
+func Get() *MyValidator {
 	validate := validator.New()
-	Validate = &MyValidator{
+	tran, _ := ut.New(en.New(), zh.New(), zh_Hant_TW.New()).GetTranslator("zh")
+	return &MyValidator{
 		Validate: validate,
-		// Tran:     tran,
+		Tran:     tran,
 	}
 }
 
