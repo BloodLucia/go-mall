@@ -33,7 +33,7 @@ func Build(ctx *gin.Context, err error, data any) {
 
 	// 内部错误
 	if e.IsInternalServer(myErr) {
-		console.ExitIf(myErr)
+		console.ErrorIf(myErr)
 	}
 
 	body := buildFailResponse(myErr)
